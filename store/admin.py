@@ -1,13 +1,9 @@
-from typing import Any, List, Optional, Tuple
-from django.contrib import admin, messages
-from django.db.models.query import QuerySet
-from django.http.request import HttpRequest
-from django.db.models import Count, Prefetch
-from django.utils.html import format_html
-from django.urls import reverse
-from django.utils.http import urlencode
-
 from .models import Category, Comment, Customer, Order, OrderItem, Product
+from django.contrib import admin, messages
+from django.db.models import Count
+from django.urls import reverse
+from django.utils.html import format_html
+from django.utils.http import urlencode
 
 
 class InventoryFilter(admin.SimpleListFilter):
