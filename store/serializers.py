@@ -1,5 +1,6 @@
 from decimal import Decimal
 from rest_framework import serializers
+from django.utils.text import slugify
 
 from . import models
 
@@ -17,7 +18,7 @@ class ProductSerializer(serializers.ModelSerializer):
     )
     class Meta:
         model = models.Product
-        fields = ['id', 'name', 'unit_price', 'inventory', 'category', 'tax_price']
+        fields = ['id', 'name', 'unit_price', 'inventory', 'category', 'tax_price', 'description']
         # id = serializers.IntegerField()
         # name = serializers.CharField(max_length = 255)
         # unit_price = serializers.DecimalField(max_digits=6, decimal_places=2)
@@ -26,3 +27,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def get_tax_price(self, product):
         return round(product.unit_price * Decimal(1.09), 2)
+    
+
+    def create(self, validated_data):
+        product = models.Product(**validated_data)
+        product.slug = slugify(product.name)
+        product.save()
+        return product
