@@ -29,13 +29,21 @@ def product_list(request):
         serializer.save()
     
 
-@api_view()
+@api_view(['GET', 'PUT'])
 def product_detail(request, pk):
     product = get_object_or_404(
         models.Product.objects.select_related('category'),
         pk=pk)
-    serializer = serializers.ProductSerializer(product, context={'request':request})
-    return Response(serializer.data)
+    
+    if request.method == 'GET':
+        serializer = serializers.ProductSerializer(product, context={'request':request})
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = serializers.ProductSerializer(product ,data=request.data, context={'request':request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+        
 
 
 
