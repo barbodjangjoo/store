@@ -7,6 +7,12 @@ from . import models
 from . import serializers
 
 @api_view(['GET', 'POST'])
+def category_list(request):
+    queryset = models.Category.objects.all()
+    serializer = serializers.CategorySerializers(queryset, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET', 'POST'])
 def category_detail(request, pk):
     if request.method == 'GET':
         category = get_object_or_404(models.Category, pk=pk)

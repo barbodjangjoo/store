@@ -5,9 +5,19 @@ from django.utils.text import slugify
 from . import models
 
 
-class CategorySerializers(serializers.Serializer):
-    title = serializers.CharField(max_length= 255)
-    description = serializers.CharField(max_length=500)
+class CategorySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = models.Category
+        fields = ['title', 'description']
+    # title = serializers.CharField(max_length= 255)
+    # description = serializers.CharField(max_length=500)
+    def get_product_count(self, category):
+        return models.Category.objects.filter(id=category.id).prefetch_related('product').count()
+    
+    def validate(self, category):
+        if category.title < 3:
+            return 'the category can not be less than 3 characters' 
+        return super().validate(category)
 
 
 class ProductSerializer(serializers.ModelSerializer):
