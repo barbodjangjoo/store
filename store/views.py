@@ -8,21 +8,30 @@ from . import serializers
 
 @api_view(['GET', 'POST'])
 def category_list(request):
-    queryset = models.Category.objects.all()
-    serializer = serializers.CategorySerializers(queryset, many=True)
-    return Response(serializer.data)
-
-@api_view(['GET', 'POST'])
-def category_detail(request, pk):
     if request.method == 'GET':
-        category = get_object_or_404(models.Category, pk=pk)
-        serializer = serializers.CategorySerializers(category, context={'request':request})
+        queryset = models.Category.objects.all()
+        serializer = serializers.CategorySerializers(queryset, many=True)
         return Response(serializer.data)
-    elif request.method == 'POST':
+    if request.method == 'POST':
         serializer = serializers.CategorySerializers(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def category_detail(request, pk):
+    category = get_object_or_404(models.Category, pk=pk)
+    if request.method == 'GET':
+        serializer = serializers.CategorySerializers(category, context={'request':request})
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = serializers.CategorySerializers(category ,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    elif request.method == 'DELETE':
+        category.delete()
+        return Response('category were delete', status=status.HTTP_200_OK)
 
 @api_view(['GET', 'POST'])
 def product_list(request):
@@ -34,6 +43,7 @@ def product_list(request):
         serializer = serializers.ProductSerializer(data = request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 @api_view(['GET', 'PUT', 'DELETE'])

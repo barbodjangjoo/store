@@ -6,18 +6,19 @@ from . import models
 
 
 class CategorySerializers(serializers.ModelSerializer):
+    product_count = serializers.SerializerMethodField()
     class Meta:
         model = models.Category
-        fields = ['title', 'description']
+        fields = ['id' ,'title', 'description', 'product_count']
     # title = serializers.CharField(max_length= 255)
     # description = serializers.CharField(max_length=500)
     def get_product_count(self, category):
-        return models.Category.objects.filter(id=category.id).prefetch_related('product').count()
+        return category.products.count()
     
-    def validate(self, category):
-        if category.title < 3:
-            return 'the category can not be less than 3 characters' 
-        return super().validate(category)
+    # def validate(self, category):
+    #     if category.title < 3:
+    #         return 'the category can not be less than 3 characters' 
+    #     return super().validate(category)
 
 
 class ProductSerializer(serializers.ModelSerializer):
