@@ -15,6 +15,7 @@ class CategorySerializers(serializers.ModelSerializer):
     def get_product_count(self, category):
         return category.products.count()
     
+    
     # def validate(self, category):
     #     if category.title < 3:
     #         return 'the category can not be less than 3 characters' 

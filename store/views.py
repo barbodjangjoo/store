@@ -9,7 +9,7 @@ from . import serializers
 @api_view(['GET', 'POST'])
 def category_list(request):
     if request.method == 'GET':
-        queryset = models.Category.objects.all()
+        queryset = models.Category.objects.prefetch_related('products').all()
         serializer = serializers.CategorySerializers(queryset, many=True)
         return Response(serializer.data)
     if request.method == 'POST':
@@ -30,6 +30,8 @@ def category_detail(request, pk):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     elif request.method == 'DELETE':
+        if category.products.count() > 0:
+            return Response({'error': 'there is some product in this category'})
         category.delete()
         return Response('category were delete', status=status.HTTP_200_OK)
 
