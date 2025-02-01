@@ -18,19 +18,20 @@ class CategoryList(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def category_detail(request, pk):
-    category = get_object_or_404(models.Category, pk=pk)
-    if request.method == 'GET':
+    
+class CategoryDetail(APIView):
+    def get(self, request, pk):
+        category = get_object_or_404(models.Category, pk=pk)
         serializer = serializers.CategorySerializers(category, context={'request':request})
         return Response(serializer.data)
-    elif request.method == 'PUT':
+    def put(self, request, pk):
+        category = get_object_or_404(models.Category, pk=pk)
         serializer = serializers.CategorySerializers(category ,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    elif request.method == 'DELETE':
+    def delete(self, request, pk):
+        category = get_object_or_404(models.Category, pk=pk)
         if category.products.count() > 0:
             return Response({'error': 'there is some product in this category'})
         category.delete()
