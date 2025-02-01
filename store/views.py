@@ -1,10 +1,23 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import status
 
 from . import models
 from . import serializers
+
+class ProductList(APIView):
+    def get(self, request):
+        queryset = models.Product.objects.select_related('category').all()
+        serializer = serializers.ProductSerializer(queryset, many=True, context={'request':request})
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = serializers.ProductSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 @api_view(['GET', 'POST'])
 def category_list(request):
@@ -35,17 +48,17 @@ def category_detail(request, pk):
         category.delete()
         return Response('category were delete', status=status.HTTP_200_OK)
 
-@api_view(['GET', 'POST'])
-def product_list(request):
-    if request.method == 'GET': 
-        queryset = models.Product.objects.select_related('category').all()
-        serializer = serializers.ProductSerializer(queryset, many=True, context={'request':request})
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = serializers.ProductSerializer(data = request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+# @api_view(['GET', 'POST'])
+# def product_list(request):
+#     if request.method == 'GET': 
+#         queryset = models.Product.objects.select_related('category').all()
+#         serializer = serializers.ProductSerializer(queryset, many=True, context={'request':request})
+#         return Response(serializer.data)
+#     elif request.method == 'POST':
+#         serializer = serializers.ProductSerializer(data = request.data)
+#         serializer.is_valid(raise_exception=True)
+#         serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 
 @api_view(['GET', 'PUT', 'DELETE'])
