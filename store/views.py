@@ -12,6 +12,22 @@ class CategoryViewSet(ModelViewSet):
     serializer_class = serializers.CategorySerializers
     queryset = models.Category.objects.prefetch_related('products').all()
 
+class ProductViewSet(ModelViewSet):
+    serializer_class = serializers.ProductSerializer
+    queryset = models.Product.objects.select_related('category').all()
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+    
+class CommentViewSet(ModelViewSet):
+    serializer_class = serializers.CommentSerializer
+
+    def get_queryset(self):
+        product_pk = self.kwargs['product_pk']
+        return models.Comment.objects.filter(product_id=product_pk).all()
+
+
+
 # class CategoryList(ListCreateAPIView):
 #     serializer_class = serializers.CategorySerializers
 #     queryset = models.Category.objects.prefetch_related('products').all()
@@ -27,12 +43,6 @@ class CategoryViewSet(ModelViewSet):
 #         category.delete()
 #         return Response('category were delete', status=status.HTTP_200_OK)
     
-class ProductViewSet(ModelViewSet):
-    serializer_class = serializers.ProductSerializer
-    queryset = models.Product.objects.select_related('category').all()
-
-    def get_serializer_context(self):
-        return {'request': self.request}
 
 
 # class ProductDetail(RetrieveUpdateDestroyAPIView):

@@ -46,3 +46,9 @@ class ProductSerializer(serializers.ModelSerializer):
         product.slug = slugify(product.name)
         product.save()
         return product
+    
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Comment
+        fields = ['id', 'name', 'product', 'body']
