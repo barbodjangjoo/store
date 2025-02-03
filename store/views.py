@@ -1,9 +1,6 @@
 from django.shortcuts import get_object_or_404, render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
 
 from . import models
 from . import serializers
@@ -14,7 +11,16 @@ class CategoryViewSet(ModelViewSet):
 
 class ProductViewSet(ModelViewSet):
     serializer_class = serializers.ProductSerializer
-    queryset = models.Product.objects.select_related('category').all()
+    queryset = models.Product.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['category_id']
+
+    # def get_queryset(self):
+    #     queryset = models.Product.objects.all()
+    #     category_id_parameter = self.request.query_params.get('category_id')
+    #     if category_id_parameter is not None:
+    #         queryset = queryset.filter(category_id=category_id_parameter)
+    #         return queryset
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -27,7 +33,7 @@ class CommentViewSet(ModelViewSet):
         return models.Comment.objects.filter(product_id=product_pk).all()
     
     def get_serializer_context(self):
-        return {'product_pk': self.kwargs['product_pk']}
+        return {'product_pk': self.kwargs['product_pk']} 
 
 
 
