@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.filters import OrderingFilter, SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
 from . import models
@@ -13,9 +14,11 @@ class CategoryViewSet(ModelViewSet):
 class ProductViewSet(ModelViewSet):
     serializer_class = serializers.ProductSerializer
     queryset = models.Product.objects.all()
-    filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['category_id']
+    filter_backends = [SearchFilter,DjangoFilterBackend, OrderingFilter]
+    Ordering_fields = ['name', 'unit_price', 'inventory ']
+    # filterset_fields = ['category_id', 'inventory]
     filter_class = filters.ProductFilter
+    search_fields = ['name']
 
     # def get_queryset(self):
     #     queryset = models.Product.objects.all()
