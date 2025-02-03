@@ -51,4 +51,9 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Comment
-        fields = ['id', 'name', 'product', 'body']
+        fields = ['id', 'name', 'body']
+    
+    def create(self, validated_data):
+        product_id = self.context['product_pk']
+        return super().create(validated_data)
+
