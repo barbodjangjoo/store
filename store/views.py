@@ -4,6 +4,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from . import models
 from . import serializers
+from . import filters
 
 class CategoryViewSet(ModelViewSet):
     serializer_class = serializers.CategorySerializers
@@ -13,7 +14,8 @@ class ProductViewSet(ModelViewSet):
     serializer_class = serializers.ProductSerializer
     queryset = models.Product.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['category_id']
+    # filterset_fields = ['category_id']
+    filter_class = filters.ProductFilter
 
     # def get_queryset(self):
     #     queryset = models.Product.objects.all()
