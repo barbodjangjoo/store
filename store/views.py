@@ -1,8 +1,10 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 
+from paginations import DefaultPaginations
 from . import models
 from . import serializers
 from . import filters
@@ -16,9 +18,10 @@ class ProductViewSet(ModelViewSet):
     queryset = models.Product.objects.all()
     filter_backends = [SearchFilter,DjangoFilterBackend, OrderingFilter]
     Ordering_fields = ['name', 'unit_price', 'inventory ']
-    # filterset_fields = ['category_id', 'inventory]
     filter_class = filters.ProductFilter
     search_fields = ['name']
+    pagination_class = DefaultPaginations
+    # filterset_fields = ['category_id', 'inventory]
 
     # def get_queryset(self):
     #     queryset = models.Product.objects.all()
