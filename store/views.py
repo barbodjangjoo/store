@@ -4,7 +4,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 
-from paginations import DefaultPaginations
+from .paginations import DefaultPagination
 from . import models
 from . import serializers
 from . import filters
@@ -20,7 +20,7 @@ class ProductViewSet(ModelViewSet):
     Ordering_fields = ['name', 'unit_price', 'inventory ']
     filter_class = filters.ProductFilter
     search_fields = ['name']
-    pagination_class = DefaultPaginations
+    pagination_class = DefaultPagination
     # filterset_fields = ['category_id', 'inventory]
 
     # def get_queryset(self):
