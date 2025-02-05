@@ -3,6 +3,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.viewsets import GenericViewSet
+from rest_framework import mixins
 
 from .paginations import DefaultPagination
 from . import models
@@ -44,7 +46,9 @@ class CommentViewSet(ModelViewSet):
         return {'product_pk': self.kwargs['product_pk']} 
     
 
-class CartViewSet(ModelViewSet):
+class CartViewSet(mixins.CreateModelMixin,
+                   mixins.RetrieveModelMixin,
+                   GenericViewSet):
     serializer_class = serializers.CartSerializer
     queryset = models.Cart.objects.all()
 
