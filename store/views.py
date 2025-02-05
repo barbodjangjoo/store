@@ -42,6 +42,11 @@ class CommentViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         return {'product_pk': self.kwargs['product_pk']} 
+    
+
+class CartViewSet(ModelViewSet):
+    serializer_class = serializers.CartSerializer
+    queryset = models.Cart.objects.all()
 
 
 
