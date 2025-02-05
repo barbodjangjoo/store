@@ -57,3 +57,8 @@ class CommentSerializer(serializers.ModelSerializer):
         product_id = self.context['product_pk']
         return super().create(validated_data)
 
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Cart
+        fields = ['id', 'create_at']
