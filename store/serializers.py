@@ -61,4 +61,4 @@ class CommentSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Cart
-        fields = ['id', 'create_at']
+        fields = ['id', 'created_at']
