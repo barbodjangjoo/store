@@ -50,7 +50,7 @@ class CartViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
                    GenericViewSet):
     serializer_class = serializers.CartSerializer
-    queryset = models.Cart.objects.all()
+    queryset = models.Cart.objects.prefetch_related('items__product').all()
 
 
 
