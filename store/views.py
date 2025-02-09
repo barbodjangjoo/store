@@ -48,9 +48,17 @@ class CommentViewSet(ModelViewSet):
 
 class CartViewSet(mixins.CreateModelMixin,
                    mixins.RetrieveModelMixin,
+                   mixins.DestroyModelMixin,
                    GenericViewSet):
     serializer_class = serializers.CartSerializer
     queryset = models.Cart.objects.prefetch_related('items__product').all()
+
+class CartItemViewSet(ModelViewSet):
+    serializer_class = serializers.CartItemSerializer
+    
+    def get_queryset(self):
+        cart_pk = self.kwargs['cart_pk']
+        return models.CartItem.objects.select_related('product').filter(cart_id=cart_pk).all()
 
 
 

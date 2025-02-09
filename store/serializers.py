@@ -80,7 +80,7 @@ class CartSerializer(serializers.ModelSerializer):
         model = models.Cart
         fields = ['id', 'items', 'total_price']
         read_only_fields = ['id']
-        # "id": 434bf227-613d-4413-b186-ea7500817034
+        # "id":  
     def get_total_price(self, cart):
         return sum([item.quantity * item.product.unit_price for item in cart.items.all()])
-
+ 
