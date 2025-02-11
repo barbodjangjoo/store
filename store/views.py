@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
 
+
 from .paginations import DefaultPagination
 from . import models
 from . import serializers
@@ -53,7 +54,8 @@ class CartViewSet(mixins.CreateModelMixin,
     serializer_class = serializers.CartSerializer
     queryset = models.Cart.objects.prefetch_related('items__product').all()
 
-class CartItemViewSet(ModelViewSet):
+class CartItemViewSet(ModelViewSet): 
+    http_method_names = ['get', 'post', 'patch', 'delete']
     
     def get_queryset(self):
         cart_pk = self.kwargs['cart_pk']
