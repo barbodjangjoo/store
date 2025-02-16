@@ -1,10 +1,11 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.pagination import PageNumberPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
+from rest_framework.response import Response
+from rest_framework.decorators import action
 
 
 from .paginations import DefaultPagination
@@ -74,6 +75,13 @@ class CartItemViewSet(ModelViewSet):
 class CustomerViewSet(ModelViewSet):
     serializer_class = serializers.CustomerSerializer
     queryset = models.Customer.objects.all()
+
+    @action(detail=False)
+    def me(self, request):
+        user_id = request.user.id
+        customer= models.Customer.objects.get(user_id=user_id)
+        serializer= serializers.CustomerSerializer(customer)
+        return Response(serializer.data)
         
 
 
