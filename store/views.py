@@ -70,6 +70,10 @@ class CartItemViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         return {'cart_pk': self.kwargs['cart_pk']}   
+    
+class CustomerViewSet(ModelViewSet):
+    serializer_class = serializers.CustomerSerializer
+    queryset = models.Customer.objects.all()
         
 
 
