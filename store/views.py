@@ -76,12 +76,20 @@ class CustomerViewSet(ModelViewSet):
     serializer_class = serializers.CustomerSerializer
     queryset = models.Customer.objects.all()
 
-    @action(detail=False)
+    @action(detail=False, methods=['GET', 'PUT'])
     def me(self, request):
         user_id = request.user.id
         customer= models.Customer.objects.get(user_id=user_id)
-        serializer= serializers.CustomerSerializer(customer)
-        return Response(serializer.data)
+        if request.method == 'GET':
+            serializer= serializers.CustomerSerializer(customer)
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = serializers.CustomerSerializer(customer, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+    
+
         
 
 
