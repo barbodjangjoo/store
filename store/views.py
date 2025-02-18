@@ -6,7 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, DjangoModelPermissions
 
 
 from .paginations import DefaultPagination
@@ -28,6 +28,7 @@ class ProductViewSet(ModelViewSet):
     filter_class = filters.ProductFilter
     search_fields = ['name']
     pagination_class = DefaultPagination
+    permission_classes = [DjangoModelPermissions]
     # filterset_fields = ['category_id', 'inventory]
 
     # def get_queryset(self):
@@ -92,6 +93,10 @@ class CustomerViewSet(ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
+    
+    @action(detail=True, permission_classes=[permissions.SendPrivateEmailToCustomerPermission])
+    def send_private_email(self, request, pk):
+        return Response(f'Sending Email to customer {pk=}')
     
 
         
