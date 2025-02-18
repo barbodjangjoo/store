@@ -6,7 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, DjangoModelPermissions
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, DjangoModelPermissions 
 
 
 from .paginations import DefaultPagination
@@ -28,7 +28,7 @@ class ProductViewSet(ModelViewSet):
     filter_class = filters.ProductFilter
     search_fields = ['name']
     pagination_class = DefaultPagination
-    permission_classes = [DjangoModelPermissions]
+    permission_classes = [permissions.IsAdminOrReadOnly]
     # filterset_fields = ['category_id', 'inventory]
 
     # def get_queryset(self):
