@@ -13,10 +13,12 @@ from .paginations import DefaultPagination
 from . import models
 from . import serializers
 from . import filters
+from . import permissions
 
 class CategoryViewSet(ModelViewSet):
     serializer_class = serializers.CategorySerializers
     queryset = models.Category.objects.prefetch_related('products').all()
+    permission_classes = [permissions.IsAdminOrReadOnly]
 
 class ProductViewSet(ModelViewSet):
     serializer_class = serializers.ProductSerializer
