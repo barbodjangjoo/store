@@ -117,7 +117,14 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = ['id', 'user' , 'birth_date']
         read_only_fields = ['user']
 
+class OrderCustomerSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(max_length=255, source= 'user.first_name')
+    last_name = serializers.CharField(max_length=255, source= 'user.last_name')
+    email = serializers.EmailField(source= 'user.email')
 
+    class Meta:
+        model = models.Customer
+        fields = ['id', 'first_name', 'last_name', 'email']
 
 
 class OrderItemProductSerializer(serializers.ModelSerializer):
@@ -136,7 +143,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
-    customer = CustomerSerializer()
+    customer = OrderCustomerSerializer()
     class Meta:
         model = models.Order
         fields = [
