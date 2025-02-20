@@ -116,3 +116,30 @@ class CustomerSerializer(serializers.ModelSerializer):
         model = models.Customer
         fields = ['id', 'user' , 'birth_date']
         read_only_fields = ['user']
+
+
+class OrderItemProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Product
+        fields = ['id', 'name', 'unit_price' ]
+class OrderItemSerializer(serializers.ModelSerializer):
+    product = OrderItemProductSerializer()
+    class Meta:
+        model = models.OrderItem
+        fields =  [
+            'id',
+            'product',
+            'quantity',
+            ]
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+    class Meta:
+        model = models.Order
+        fields = [
+            'id', 
+            'customer_id', 
+            'datetime_created', 
+            'status',
+            'items',
+            ]
