@@ -6,7 +6,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser, IsAuthenticated, DjangoModelPermissions 
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from django.db.models import Prefetch 
 
 
 from .paginations import DefaultPagination
@@ -100,6 +101,11 @@ class CustomerViewSet(ModelViewSet):
     
 class OrderViewSet(ModelViewSet):
     serializer_class = serializers.OrderSerializer
-    queryset = models.Order.objects..all()
 
-
+    def get_queryset(self):
+        return models.Order.objects.prefetch_related(
+            Prefetch(
+                'items',
+                queryset=models.OrderItem.objects.select_related('product'),
+            )
+            ).all()
