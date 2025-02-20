@@ -108,4 +108,4 @@ class OrderViewSet(ModelViewSet):
                 'items',
                 queryset=models.OrderItem.objects.select_related('product'),
             )
-            ).select_related('customer').all()
+            ).select_related('customer__user').all()
