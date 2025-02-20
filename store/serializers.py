@@ -118,6 +118,8 @@ class CustomerSerializer(serializers.ModelSerializer):
         read_only_fields = ['user']
 
 
+
+
 class OrderItemProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Product
@@ -134,11 +136,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderItemSerializer(many=True)
+    customer = CustomerSerializer()
     class Meta:
         model = models.Order
         fields = [
             'id', 
-            'customer_id', 
+            'customer', 
             'datetime_created', 
             'status',
             'items',
