@@ -101,7 +101,6 @@ class CustomerViewSet(ModelViewSet):
         return Response(f'Sending Email to customer {pk=}')
     
 class OrderViewSet(ModelViewSet):
-    serializer_class = serializers.OrderSerializer
 
     def get_queryset(self):
         queryset= models.Order.objects.prefetch_related(
@@ -113,4 +112,10 @@ class OrderViewSet(ModelViewSet):
         if self.request.user.is_staff:
             return queryset
         return queryset.filter(customer__user_id=self.request.user.id)
+    
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return serializers.OrderForAdminSerializer
+        return serializers.OrderSerializer
+
     
