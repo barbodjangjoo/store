@@ -6,7 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.db.models import Prefetch 
 
 
@@ -44,6 +44,7 @@ class ProductViewSet(ModelViewSet):
     
 class CommentViewSet(ModelViewSet):
     serializer_class = serializers.CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         product_pk = self.kwargs['product_pk']
