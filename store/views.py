@@ -115,8 +115,12 @@ class OrderViewSet(ModelViewSet):
     
     def get_serializer_class(self):
         
+        if self.request.method == 'POST':
+            return serializers.OrderCreateSerializer
+        
         if self.request.user.is_staff:
             return serializers.OrderForAdminSerializer
+        
         return serializers.OrderSerializer
 
     
