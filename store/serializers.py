@@ -181,3 +181,10 @@ class OrderCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError('Your cart is Empty')
 
         return cart_id
+    
+    def save(self, **kwargs):
+        cart_id = self.validated_data['cart_id']
+        user_id = self.context['user_id']
+        customer = models.Customer.objects.get(user_id=user_id)
+         
+
