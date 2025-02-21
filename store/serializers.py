@@ -163,3 +163,21 @@ class OrderSerializer(serializers.ModelSerializer):
             'status',
             'items',
             ]
+         
+class OrderCreateSerializer(serializers.Serializer): 
+    cart_id = serializers.UUIDField()
+
+    def validate_cart_id(self, cart_id):
+        # try:
+        # if models.Cart.objects.prefetch_related('items').get(id=cart_id).items.count() == 0:
+        #         raise serializers.ValidationError('your cart is empty')
+        # except models.Cart.DoesNotExist:
+        #     raise serializers.ValidationError('There is no cart with this cart id!')
+
+        if models.Cart.objects.filter(id=cart_id).exists():
+            raise serializers.ValidationError('There is no cart with this cart id!')
+
+        if models.CartItem.objects.filter(cart_id=cart_id).count() == 0:
+            raise serializers.ValidationError('Your cart is Empty')
+
+        return cart_id

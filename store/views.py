@@ -114,6 +114,7 @@ class OrderViewSet(ModelViewSet):
         return queryset.filter(customer__user_id=self.request.user.id)
     
     def get_serializer_class(self):
+        
         if self.request.user.is_staff:
             return serializers.OrderForAdminSerializer
         return serializers.OrderSerializer
