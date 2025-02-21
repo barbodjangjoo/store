@@ -104,9 +104,13 @@ class OrderViewSet(ModelViewSet):
     serializer_class = serializers.OrderSerializer
 
     def get_queryset(self):
-        return models.Order.objects.prefetch_related(
+        queryset= models.Order.objects.prefetch_related(
             Prefetch(
                 'items',
                 queryset=models.OrderItem.objects.select_related('product'),
             )
             ).select_related('customer__user').all()
+        if self.request.user.is_staff:
+            return queryset
+        return queryset.filter(customer__user_id=self.request.user.id)
+    
