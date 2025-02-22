@@ -15,6 +15,7 @@ from . import models
 from . import serializers
 from . import filters
 from . import permissions
+from .signals import order_created
 
 class CategoryViewSet(ModelViewSet):
     serializer_class = serializers.CategorySerializers
@@ -141,7 +142,7 @@ class OrderViewSet(ModelViewSet):
         created_order_serializer.is_valid(raise_exception=True)
         created_order = created_order_serializer.save()
 
+        order_created.send_robust(self.__class__, order=created_order)
+
         serializer = serializers.OrderSerializer(created_order)
         return Response(serializer.data)
-
-    
