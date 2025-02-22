@@ -101,8 +101,12 @@ class CustomerViewSet(ModelViewSet):
         return Response(f'Sending Email to customer {pk=}')
     
 class OrderViewSet(ModelViewSet):
-    permission_classes = [IsAuthenticated]
-    
+    http_method_names = ['get', 'post', 'patch', 'delete', 'option', 'head']
+    def get_permissions(self):
+        if self.request.method in ['PATCH', 'DELETE']:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
+
     def get_queryset(self):
         queryset= models.Order.objects.prefetch_related(
             Prefetch(
@@ -126,5 +130,16 @@ class OrderViewSet(ModelViewSet):
     
     def get_serializer_context(self):
         return {'user_id': self.request.user.id}
+
+    def create(self, request, *args, **kwargs):
+        created_order_serializer = serializers.OrderCreateSerializer(
+            data=request.data,
+            context={'user_id': self.request.user.id},
+            )
+        created_order_serializer.is_valid(raise_exception=True)
+        created_order = created_order_serializer.save()
+
+        serializer = serializers.OrderSerializer(created_order)
+        return Response(serializer.data)
 
     
