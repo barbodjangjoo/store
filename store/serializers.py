@@ -164,6 +164,11 @@ class OrderSerializer(serializers.ModelSerializer):
             'status',
             'items',
             ]
+        
+class OrderUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Order
+        fields = ['status']
          
 class OrderCreateSerializer(serializers.Serializer): 
     cart_id = serializers.UUIDField()

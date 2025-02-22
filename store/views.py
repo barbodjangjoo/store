@@ -122,6 +122,8 @@ class OrderViewSet(ModelViewSet):
 
         if self.request.method == 'POST':
             return serializers.OrderCreateSerializer
+        if self.request.method == 'PATCH':
+            return serializers.OrderUpdateSerializer
         
         if self.request.user.is_staff:
             return serializers.OrderForAdminSerializer
